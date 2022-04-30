@@ -1,6 +1,4 @@
-# aws-java-sdk-examples
-
-AWS Java SDK examples.
+# AWS Lambda Java SDK examples.
 
 1 - Lambda
    -  Handler
