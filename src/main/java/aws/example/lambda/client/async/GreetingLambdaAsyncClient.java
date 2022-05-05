@@ -53,8 +53,6 @@ public class GreetingLambdaAsyncClient {
 									.withFunctionName(functionArn)
 									.withPayload(greetingEvent)
 									.withInvocationType(InvocationType.Event); // Make the call asynchronously. 
-		// Client will receive 202-Received but not an actual response detail after processing function logic.
-		// Once after processing gets completed, response payload sent to destination queue (SQS) configured in the function config. in AWS Console.
 		
 		InvokeResult response = null;
 
