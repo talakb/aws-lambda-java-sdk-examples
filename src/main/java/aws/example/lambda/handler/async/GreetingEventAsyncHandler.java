@@ -24,6 +24,7 @@ public class GreetingEventAsyncHandler {
 
 		// response returned after processing a specific business logic.
 		//String response = "Async call response msg/obj sent to a destination (E.g: SQS)";
+		//TODO - add logic to pass incoming event into S3 bucket or SQS queue.
 
 		logger.log("Exit " + this.getClass().getName() + " handleRequest");
 	}
