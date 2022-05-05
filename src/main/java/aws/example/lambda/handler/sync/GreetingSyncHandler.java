@@ -8,7 +8,7 @@ import com.google.gson.GsonBuilder;
 
 import aws.example.lambda.util.EventObjectConverter;
 
-public class GreetingEventSyncHandler  implements RequestHandler<Object, String> {
+public class GreetingSyncHandler  implements RequestHandler<Object, String> {
 	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 	@Override

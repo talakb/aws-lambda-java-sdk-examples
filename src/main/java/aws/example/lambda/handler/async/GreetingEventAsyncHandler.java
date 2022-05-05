@@ -2,17 +2,15 @@ package aws.example.lambda.handler.async;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import aws.example.lambda.util.EventObjectConverter;
 
-public class GreetingEventAsyncHandler implements RequestHandler<Object, String> {
+public class GreetingEventAsyncHandler {
 	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-	@Override
-	public String handleRequest(Object event, Context context) {
+	public void handleRequest(Object event, Context context) {
 		LambdaLogger logger = context.getLogger();
 		logger.log("Enter " + this.getClass().getName() + " handleRequest");
 
@@ -25,9 +23,8 @@ public class GreetingEventAsyncHandler implements RequestHandler<Object, String>
 		logger.log("EVENT: (Input payload sent to) " + this.getClass().getSimpleName() + ": " + EventObjectConverter.convertEventObjIntoJson(event));
 
 		// response returned after processing a specific business logic.
-		String response = "Async call response msg/obj sent to a destination (E.g: SQS)";
+		//String response = "Async call response msg/obj sent to a destination (E.g: SQS)";
 
 		logger.log("Exit " + this.getClass().getName() + " handleRequest");
-		return response;
 	}
 }
