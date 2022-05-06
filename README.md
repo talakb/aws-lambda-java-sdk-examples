@@ -3,7 +3,14 @@
  
  ## 1 -   Asynchronous (Event) Handler
  
-Client will receive 202-Accepted response but not the actual response detail after processing the function logic. Once processing gets completed, response payload will be sent to a destination (SNS topic, SQS queue, another Lambda function, or EventBridge event bus).  Destinations  needs to be configured in the Lambda function config. in AWS Console or using Lambda API.
+* Client will receive 202-Accepted response but not the actual response detail after processing the function logic. Once processing gets completed, response payload will be sent to a destination:
+  - SNS topic
+  - SQS queue
+  - Lambda function
+  - EventBridge event bus
+  - Kinesis or DynamoDB stream
+ 
+ * Destinations  needs to be configured in the Lambda function config. in AWS Console or using Lambda API.
   
  ### a) Send response to a queue (SQS and DLQ)
   
