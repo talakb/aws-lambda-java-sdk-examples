@@ -10,7 +10,7 @@ import aws.example.lambda.util.EventObjectConverter;
 public class GreetingEventAsyncHandler {
 	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-	public void handleRequest(Object event, Context context) {
+	public void handleRequest(Object event, Context context) { // No response type is expected from async handler. 
 		LambdaLogger logger = context.getLogger();
 		logger.log("Enter " + this.getClass().getName() + " handleRequest");
 
