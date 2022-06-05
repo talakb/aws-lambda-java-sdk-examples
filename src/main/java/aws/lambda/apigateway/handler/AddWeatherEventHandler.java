@@ -72,7 +72,7 @@ public class AddWeatherEventHandler implements RequestHandler<Object, ApiGateway
 	}
 	
 	
-	private void addWeatherEvent(WeatherEvent event) {
+	private void addWeatherEvent(WeatherEvent event) throws Exception {
 		log.log("Enter " + this.getClass().getName() + " addWeatherEvent");
 
 		HashMap<String, AttributeValue> itemValues = new HashMap<>();
@@ -94,8 +94,10 @@ public class AddWeatherEventHandler implements RequestHandler<Object, ApiGateway
 
 		} catch (ResourceNotFoundException e) {
 			log.log(String.format("Error: DynamoDB table \"%s\" can't be found.\n", tableName));
+			throw e;
 		} catch (Exception e) {
-			log.log(e.getMessage());
+			log.log(ExceptionUtils.getStackTrace(e));
+			throw e;
 		}
 
 		log.log("Exit " + this.getClass().getName() + " addWeatherEvent");
