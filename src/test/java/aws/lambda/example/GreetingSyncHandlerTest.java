@@ -1,4 +1,4 @@
-package aws.example.lambda.handler.sync;
+package aws.lambda.example;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import aws.example.lambda.util.TestContext;
+import aws.lambda.example.handler.sync.GreetingSyncHandler;
+import aws.lambda.test.util.TestContext;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class GreetingSyncHandlerTest {
