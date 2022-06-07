@@ -42,7 +42,7 @@ public class AddWeatherEventHandler implements RequestHandler<Object, ApiGateway
 
 		try {
 			// log execution details
-			log.log("(Runtime MicroVM/Firecracker env't variables): " + gson.toJson(System.getenv()));
+			log.log("Runtime MicroVM/Firecracker env't variables: " + gson.toJson(System.getenv()));
 			log.log("Context: (Lambda function metadata/info.) " + gson.toJson(context));
 
 			// read/parse incoming event
