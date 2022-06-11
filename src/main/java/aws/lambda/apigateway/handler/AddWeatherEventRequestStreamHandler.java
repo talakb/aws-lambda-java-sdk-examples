@@ -20,7 +20,7 @@ import com.google.gson.GsonBuilder;
 
 import aws.lambda.apigateway.model.WeatherEvent;
 import aws.lambda.apigateway.response.ApiGatewayResponse;
-import aws.lambda.util.EventObjectConverterUtil;
+import aws.lambda.util.JsonUtil;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
@@ -63,7 +63,7 @@ public class AddWeatherEventRequestStreamHandler implements RequestStreamHandler
 			log.log("Event input payload sent to the function: " + weatherEventJson);
 
 			// Convert input JSON to WeatherEvent object.
-			WeatherEvent weatherEvent = EventObjectConverterUtil.toObject(weatherEventJson, WeatherEvent.class);
+			WeatherEvent weatherEvent = JsonUtil.toObject(weatherEventJson, WeatherEvent.class);
 			addWeatherEvent(weatherEvent);
 
 			// prepare response obj./message.
@@ -81,7 +81,7 @@ public class AddWeatherEventRequestStreamHandler implements RequestStreamHandler
 		log.log("Exit " + this.getClass().getName() + " handleRequest");
 		
 		OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
-        writer.write(EventObjectConverterUtil.toJsonString(response));
+        writer.write(JsonUtil.toJsonString(response));
         writer.close();
 	}
 

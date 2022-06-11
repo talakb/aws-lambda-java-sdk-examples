@@ -17,10 +17,10 @@ import aws.lambda.apigateway.model.WeatherEvent;
 import aws.lambda.apigateway.request.ApiGateWayRequest;
 import aws.lambda.apigateway.response.ApiGatewayResponse;
 import aws.lambda.test.util.TestContext;
-import aws.lambda.util.EventObjectConverterUtil;
+import aws.lambda.util.JsonUtil;
 
 @TestInstance(Lifecycle.PER_CLASS)
-public class AddWeatherEventHandlerTest {
+public class AddWeatherEventRequestHandlerTest {
 
 	// CUT (Class Under Test)
 	private AddWeatherEventRequestHandler addWeatherEventHandler;
@@ -44,7 +44,7 @@ public class AddWeatherEventHandlerTest {
 		weatherEvent.setLongitude(BigDecimal.valueOf(-97.733330));
 		
 		ApiGateWayRequest request = new ApiGateWayRequest();
-		String weatherEventJson = EventObjectConverterUtil.toJsonString(weatherEvent);
+		String weatherEventJson = JsonUtil.toJsonString(weatherEvent);
 		request.setBody(weatherEventJson);
 		
 		//Act (When)

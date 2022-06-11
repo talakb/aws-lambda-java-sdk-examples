@@ -8,8 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 public class WeatherEvent {
 
 	@JsonProperty(value = "city-name")
@@ -18,5 +16,36 @@ public class WeatherEvent {
 	private BigDecimal latitude;
 	private BigDecimal longitude;
 	private BigDecimal temprature;
+	
+	public String getCityName() {
+		return cityName;
+	}
+	public void setCityName(String cityName) {
+		this.cityName = cityName;
+	}
+	public Date getTimestamp() {
+		return timestamp;
+	}
+	public void setTimestamp(Date timestamp) {
+		this.timestamp = timestamp;
+	}
+	public BigDecimal getLatitude() {
+		return latitude;
+	}
+	public void setLatitude(BigDecimal latitude) {
+		this.latitude = latitude;
+	}
+	public BigDecimal getLongitude() {
+		return longitude;
+	}
+	public void setLongitude(BigDecimal longitude) {
+		this.longitude = longitude;
+	}
+	public BigDecimal getTemprature() {
+		return temprature;
+	}
+	public void setTemprature(BigDecimal temprature) {
+		this.temprature = temprature;
+	}
 
 }

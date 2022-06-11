@@ -5,12 +5,13 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public final class EventObjectConverterUtil {
+public final class JsonUtil {
 	// Jackson JSON string to object and vice-versa coverter.
 	private static final ObjectMapper objectMapper = new ObjectMapper()
 			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-	private EventObjectConverterUtil() {
+	
+	private JsonUtil() {
 
 	}
 
@@ -29,5 +30,9 @@ public final class EventObjectConverterUtil {
 		}
 
 		return objectMapper.readValue(jsonInput, toType);
+	}
+	
+	public static ObjectMapper getJsonMapper() {
+		return objectMapper;
 	}
 }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import aws.lambda.util.EventObjectConverterUtil;
+import aws.lambda.util.JsonUtil;
 
 public class GreetingEventAsyncHandler {
 	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -21,7 +21,7 @@ public class GreetingEventAsyncHandler {
 
 		// process event
 		logger.log("EVENT TYPE: " + event.getClass().getName());
-		logger.log("EVENT: (Input payload sent to) " + this.getClass().getSimpleName() + ": " + EventObjectConverterUtil.toJsonString(event));
+		logger.log("EVENT: (Input payload sent to) " + this.getClass().getSimpleName() + ": " + JsonUtil.toJsonString(event));
 
 		// response returned after processing a specific business logic.
 		//String response = "Async call response msg/obj sent to a destination (E.g: SQS)";

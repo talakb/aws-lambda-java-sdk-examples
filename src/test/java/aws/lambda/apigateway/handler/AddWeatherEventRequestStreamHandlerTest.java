@@ -17,7 +17,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import aws.lambda.apigateway.model.WeatherEvent;
 import aws.lambda.test.util.TestContext;
-import aws.lambda.util.EventObjectConverterUtil;
+import aws.lambda.util.JsonUtil;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class AddWeatherEventRequestStreamHandlerTest {
@@ -42,7 +42,7 @@ public class AddWeatherEventRequestStreamHandlerTest {
 		weatherEvent.setLatitude(BigDecimal.valueOf(30.266666));
 		weatherEvent.setLongitude(BigDecimal.valueOf(-97.733330));
 		
-		String weatherEventJson = EventObjectConverterUtil.toJsonString(weatherEvent);
+		String weatherEventJson = JsonUtil.toJsonString(weatherEvent);
 		
 		
 		InputStream inputStream = new ByteArrayInputStream(weatherEventJson.getBytes(StandardCharsets.UTF_8));

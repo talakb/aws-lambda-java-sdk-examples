@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import aws.lambda.util.EventObjectConverterUtil;
+import aws.lambda.util.JsonUtil;
 
 /**
  * Example to show how to integrate S3 with Lambda.
@@ -33,7 +33,7 @@ public class S3BucketTriggerAsyncHandler implements RequestHandler<Object, Strin
 		// process event
 		logger.log("EVENT TYPE: S3 Bucket/Object change trigger.");
 		try {
-			logger.log("EVENT: (S3 Bucket/Object metadata sent to the function) " + EventObjectConverterUtil.toJsonString(event));
+			logger.log("EVENT: (S3 Bucket/Object metadata sent to the function) " + JsonUtil.toJsonString(event));
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			logger.log(ExceptionUtils.getStackTrace(e));

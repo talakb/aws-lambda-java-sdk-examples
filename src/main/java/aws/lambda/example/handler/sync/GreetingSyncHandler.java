@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import aws.lambda.util.EventObjectConverterUtil;
+import aws.lambda.util.JsonUtil;
 
 public class GreetingSyncHandler  implements RequestHandler<Object, String> {
 	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -26,7 +26,7 @@ public class GreetingSyncHandler  implements RequestHandler<Object, String> {
 		// process event
 		logger.log("EVENT TYPE: " + event.getClass().getName());
 		try {
-			logger.log("EVENT: (Input payload sent to the function) " + EventObjectConverterUtil.toJsonString(event));
+			logger.log("EVENT: (Input payload sent to the function) " + JsonUtil.toJsonString(event));
 		} catch (JsonProcessingException e) {
 			logger.log(ExceptionUtils.getStackTrace(e));
 		}

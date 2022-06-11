@@ -1,7 +1,12 @@
 package aws.lambda.apigateway.handler;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -9,6 +14,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -19,10 +25,11 @@ import aws.lambda.util.JsonUtil;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
+import software.amazon.awssdk.services.dynamodb.model.GetItemRequest;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 import software.amazon.awssdk.services.dynamodb.model.ResourceNotFoundException;
 
-public class AddWeatherEventRequestHandler implements RequestHandler<ApiGateWayRequest, ApiGatewayResponse> {
+public class GetWeatherEventRequestHandler implements RequestHandler<ApiGateWayRequest, ApiGatewayResponse> {
 	private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 	private static final SimpleDateFormat UTC_DATE_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS zzz");
 	private LambdaLogger log;
@@ -36,7 +43,7 @@ public class AddWeatherEventRequestHandler implements RequestHandler<ApiGateWayR
 	private final String tableName = System.getenv("WEATHER_INFO_TABLE_NAME");
 	
 	@Override
-	public ApiGatewayResponse handleRequest(ApiGateWayRequest event, Context context) {
+	public ApiGatewayResponse handleRequest(ApiGateWayRequest request, Context context) {
 		log = context.getLogger();
 		log.log("Enter " + this.getClass().getName() + " handleRequest");
 		ApiGatewayResponse response = new ApiGatewayResponse();
@@ -47,17 +54,21 @@ public class AddWeatherEventRequestHandler implements RequestHandler<ApiGateWayR
 			log.log("Context: (Lambda function metadata/info.) " + gson.toJson(context));
 
 			// read/parse incoming event
-			log.log("Event type: " + event.getClass().getTypeName());
-			String weatherEventJson = event.getBody();
-			log.log("Event input payload sent to the function) " + weatherEventJson);
+			log.log("Event type: " + request.getClass().getTypeName());
+			String weatherEventJson = request.getBody();
+			log.log("Event input payload sent to the function: " + weatherEventJson);
 
 			// Convert input JSON to WeatherEvent object.
-			WeatherEvent weatherEvent = JsonUtil.toObject(weatherEventJson, WeatherEvent.class);
-			addWeatherEvent(weatherEvent);
 			
-			//prepare success response obj./message.
-			response.setStatusCode(200);
-			response.setBody("Weather event for city " +  weatherEvent.getCityName() + " saved successfully.");
+			JsonNode node = JsonUtil.getJsonMapper().readTree(weatherEventJson);
+			String cityName = node.get("city-name").textValue();
+			String timestamp = node.get("timestamp").toString();
+			//convert to DAte and then to UTC
+			Date date = Date.from(Instant.ofEpochMilli(Long.valueOf(timestamp)));
+			
+			
+			return getRecentWeatherInfoByCityName(cityName, UTC_DATE_FORMATTER.format(date));
+			
 
 		} catch (Exception e) {
 			log.log(ExceptionUtils.getStackTrace(e));
@@ -72,39 +83,49 @@ public class AddWeatherEventRequestHandler implements RequestHandler<ApiGateWayR
 	}
 	
 	
-	private void addWeatherEvent(WeatherEvent event) throws Exception {
+	private ApiGatewayResponse getRecentWeatherInfoByCityName(String cityName, String timestamp) throws Exception {
 		log.log("Enter " + this.getClass().getName() + " addWeatherEvent");
+		log.log("Table name: " + tableName);
+		log.log("City name: " + cityName);
 		
-		if(StringUtils.isBlank(tableName)) {
-			throw new Exception("Table name is not passed to the function.");
-		}
 		
+		ApiGatewayResponse response = new ApiGatewayResponse();
 
-		HashMap<String, AttributeValue> itemValues = new HashMap<>();
-		itemValues.put("city-name", AttributeValue.builder().s(event.getCityName()).build());
-		itemValues.put("timestamp",
-				AttributeValue.builder().s(UTC_DATE_FORMATTER.format(event.getTimestamp())).build());
-		itemValues.put("latitude", AttributeValue.builder().n(String.valueOf(event.getLatitude())).build());
-		itemValues.put("longitude", AttributeValue.builder().n(String.valueOf(event.getLongitude())).build());
-		itemValues.put("temprature", AttributeValue.builder().n(String.valueOf(event.getTemprature())).build());
+        try {
+        	HashMap<String,AttributeValue> keyToGet = new HashMap<>();
+            keyToGet.put("city-name", AttributeValue.builder()
+                    .s(cityName).build());
+            
+            keyToGet.put("timestamp", AttributeValue.builder()
+                    .s(timestamp).build());
+            
+        	GetItemRequest request = GetItemRequest.builder()
+                    .key(keyToGet)
+                    .tableName(tableName)
+                    .build();
+        	
+        	
+        	
+                Map<String,AttributeValue> returnedItem = dynamoDbClient.getItem(request).item();
+                String temprature = returnedItem.get("temprature").n();
+                
+                log.log("Temprature: " + temprature);
+                
+                WeatherEvent event = new WeatherEvent();
+                event.setCityName(cityName);
+                event.setTemprature(new BigDecimal(temprature));
+                
+                response.setBody(JsonUtil.toJsonString(event));
+                response.setStatusCode(200);
 
-		try {
-			log.log("Table name: " + tableName);
-			log.log("Item: " + gson.toJson(itemValues));
 
-			PutItemRequest request = PutItemRequest.builder().tableName(tableName).item(itemValues).build();
-			dynamoDbClient.putItem(request);
-
-			log.log("Item added successfully to the table " + tableName);
-
-		} catch (ResourceNotFoundException e) {
-			log.log(String.format("Error: DynamoDB table \"%s\" can't be found.\n", tableName));
-			throw e;
-		} catch (Exception e) {
-			log.log(ExceptionUtils.getStackTrace(e));
-			throw e;
-		}
+        } catch (Exception e) {
+            System.err.println("GetItem failed.");
+            System.err.println(e.getMessage());
+        }
 
 		log.log("Exit " + this.getClass().getName() + " addWeatherEvent");
+		
+		return response;
 	}
 }
