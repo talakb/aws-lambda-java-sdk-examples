@@ -8,7 +8,7 @@ import java.util.Map;
  */
 public class ApiGateWayRequest {
 	
-	 private String body;
+	 private String body; //Request payload/body as JSON string.
 	 private Map<String, String> queryStringParameters;
 	 
 	public String getBody() {

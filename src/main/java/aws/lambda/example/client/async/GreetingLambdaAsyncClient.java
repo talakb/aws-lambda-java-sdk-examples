@@ -78,11 +78,11 @@ public class GreetingLambdaAsyncClient {
 		awsPropFilePath = args[0];
 		lambdaFunctionName = args[1];
 		
-		if(StringUtils.isEmpty(awsPropFilePath)) {
+		if(StringUtils.isBlank(awsPropFilePath)) {
 			throw new Exception("Location of AWS connection property file is required.");
 		}
 		
-		if(StringUtils.isEmpty(lambdaFunctionName)) {
+		if(StringUtils.isBlank(lambdaFunctionName)) {
 			throw new Exception("Lambda function name is required.");
 		}
 	}

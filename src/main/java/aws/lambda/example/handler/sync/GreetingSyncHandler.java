@@ -1,5 +1,7 @@
 package aws.lambda.example.handler.sync;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
@@ -26,8 +28,7 @@ public class GreetingSyncHandler  implements RequestHandler<Object, String> {
 		try {
 			logger.log("EVENT: (Input payload sent to the function) " + EventObjectConverterUtil.toJsonString(event));
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.log(ExceptionUtils.getStackTrace(e));
 		}
 
 		// response returned after processing a specific business logic.

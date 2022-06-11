@@ -1,9 +1,13 @@
 package aws.lambda.apigateway.handler;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -11,29 +15,24 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import aws.lambda.apigateway.model.WeatherEvent;
-import aws.lambda.apigateway.request.ApiGateWayRequest;
-import aws.lambda.apigateway.response.ApiGatewayResponse;
 import aws.lambda.test.util.TestContext;
 import aws.lambda.util.EventObjectConverterUtil;
 
 @TestInstance(Lifecycle.PER_CLASS)
-public class AddWeatherEventHandlerTest {
-
+public class AddWeatherEventRequestStreamHandlerTest {
 	// CUT (Class Under Test)
-	private AddWeatherEventRequestHandler addWeatherEventHandler;
+	private AddWeatherEventRequestStreamHandler addWeatherEventRequestStreamHandler;
 	private TestContext testContext;
 
 	@BeforeAll
 	public void init() {
-		addWeatherEventHandler = new AddWeatherEventRequestHandler();
+		addWeatherEventRequestStreamHandler = new AddWeatherEventRequestStreamHandler();
 		testContext = new TestContext();
 	}
 	
 	@Test
-	public void handleRequestShoulReturnValidResponse() throws JsonProcessingException {
+	public void handleRequestShoulReturnValidResponse() throws IOException {
 		//AAA
 		//Arrange (Given)
 		WeatherEvent weatherEvent = new WeatherEvent();
@@ -43,17 +42,19 @@ public class AddWeatherEventHandlerTest {
 		weatherEvent.setLatitude(BigDecimal.valueOf(30.266666));
 		weatherEvent.setLongitude(BigDecimal.valueOf(-97.733330));
 		
-		ApiGateWayRequest request = new ApiGateWayRequest();
 		String weatherEventJson = EventObjectConverterUtil.toJsonString(weatherEvent);
-		request.setBody(weatherEventJson);
+		
+		
+		InputStream inputStream = new ByteArrayInputStream(weatherEventJson.getBytes(StandardCharsets.UTF_8));
+		OutputStream ouputStream = null;
 		
 		//Act (When)
-		ApiGatewayResponse response = addWeatherEventHandler.handleRequest(request, testContext);
-		int expectedResponseCode = response.getStatusCode();
+		addWeatherEventRequestStreamHandler.handleRequest(inputStream, ouputStream, testContext);
 		
 		//Assert (Then)
-		assertNotNull(response);
-		assertEquals(expectedResponseCode, 200);
+		assertNotNull(ouputStream);
 	}
+
+
 
 }
