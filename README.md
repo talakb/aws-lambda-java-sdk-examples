@@ -12,8 +12,9 @@
      - If 'allow' return policy is returned from the authorizer function, API Gateway forward the request to a lambda function based on the request resource and method.
   -  Lambda
   -  DynamoDB
+  
+![WeatherAPI-Serverless-Example drawio](https://user-images.githubusercontent.com/5312958/173243136-610cbb94-c816-4ac7-9306-fddd30c16fb1.png)
 
-![WeatherAPI-Serverless-Example drawio](https://user-images.githubusercontent.com/5312958/172287492-ef6f378c-213d-4213-bad5-161815226943.png)
 
  ## 2 -   Asynchronous (Event) Handler
  
