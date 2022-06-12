@@ -31,4 +31,4 @@
  ## 3 -   Stream Processing Handler (TODO)
  
  * The event trigger will be DynamoDB stream (events from CRUD operations on an item).
- * Lambda function logic receives the stream even from DynamoDB and executes custom logic.
+ * Lambda function logic receives the stream event from DynamoDB and executes additional logic. The response can be sent to a destination, if needed.
