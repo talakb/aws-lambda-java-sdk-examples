@@ -7,6 +7,9 @@
 
 * A simple example with CRUD operation to accept request via API Gateway and interact with DynamoDB backend table. AWS services used:
   -  API Gateway
+     - Lambda authorizer function is used to authentcate request using a token passed from API Gateway.
+     - The authorizer function evaluates incoming toekn and returns allow or deny security policy back to API Gateway.
+     - If 'allow' return policy is returned from the authorizer function, API Gateway forward the request to a lambda function based on the request resource and method.
   -  Lambda
   -  DynamoDB
 
