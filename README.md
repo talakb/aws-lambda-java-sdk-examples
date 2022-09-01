@@ -3,7 +3,7 @@
 ## 1 -   Synchronous (RequestResponse) Handler
 
 
- ### Serverless weather API to add/read weather info.
+ ### Serverless weather API
 
 * A simple example with CRUD operation to accept request via API Gateway and interact with DynamoDB backend table. AWS services used:
   -  API Gateway
