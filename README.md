@@ -18,7 +18,7 @@
 
  ## 2 -   Asynchronous (Event) Handler
  
-* Client will receive 202-Accepted response but not the actual response detail after processing the function logic. Once processing gets completed, response payload will be sent to a destination:
+* Client will receive 202-Accepted response but not the actual response detail of a function logic. Once processing gets completed, response payload will be sent to a destination:
   - SNS topic
   - SQS queue
   - Lambda function
